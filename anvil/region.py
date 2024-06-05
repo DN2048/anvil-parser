@@ -1,9 +1,12 @@
-from typing import Tuple, Union, BinaryIO
-from nbt import nbt
+import anvil
+import pathlib
+import re
 import zlib
 from io import BytesIO
-import anvil
+from nbt import nbt
+from typing import Tuple, Union, BinaryIO
 from .errors import GZipChunkData
+
 
 class Region:
     """
@@ -15,9 +18,24 @@ class Region:
         Region file (``.mca``) as bytes
     """
     __slots__ = ('data',)
+
     def __init__(self, data: bytes):
         """Makes a Region object from data, which is the region file content"""
         self.data = data
+
+    @property
+    def path(self):
+        return self.__path
+
+    @property
+    def coords(self):
+        region_name = pathlib.PurePath(self.__path).name
+        region_coords = re.findall(r'(-?\d+)', region_name)
+
+        if len(region_coords) == 2:
+            return [int(i) for i in region_coords]
+        else:
+            return ['?', '?']
 
     @staticmethod
     def header_offset(chunk_x: int, chunk_z: int) -> int:
@@ -48,7 +66,7 @@ class Region:
             Chunk's Z value
         """
         b_off = self.header_offset(chunk_x, chunk_z)
-        off = int.from_bytes(self.data[b_off : b_off + 3], byteorder='big')
+        off = int.from_bytes(self.data[b_off: b_off + 3], byteorder='big')
         sectors = self.data[b_off + 3]
         return (off, sectors)
 
@@ -74,10 +92,10 @@ class Region:
             return
         off = off[0] * 4096
         length = int.from_bytes(self.data[off:off + 4], byteorder='big')
-        compression = self.data[off + 4] # 2 most of the time
+        compression = self.data[off + 4]  # 2 most of the time
         if compression == 1:
             raise GZipChunkData('GZip is not supported')
-        compressed_data = self.data[off + 5 : off + 5 + length - 1]
+        compressed_data = self.data[off + 5: off + 5 + length - 1]
         return nbt.NBTFile(buffer=BytesIO(zlib.decompress(compressed_data)))
 
     def get_chunk(self, chunk_x: int, chunk_z: int) -> 'anvil.Chunk':
@@ -108,7 +126,9 @@ class Region:
             Either a file path or a file object
         """
         if isinstance(file, str):
+            cls.__path = file
             with open(file, 'rb') as f:
                 return cls(data=f.read())
         else:
+            cls.__path = str(file)
             return cls(data=file.read())
