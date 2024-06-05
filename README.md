@@ -1,19 +1,11 @@
-# anvil-parser
-
-[![CodeFactor](https://www.codefactor.io/repository/github/matcool/anvil-parser/badge/master)](https://www.codefactor.io/repository/github/matcool/anvil-parser/overview/master)
+# Minecraft Anvil Parser
 [![Documentation Status](https://readthedocs.org/projects/anvil-parser/badge/?version=latest)](https://anvil-parser.readthedocs.io/en/latest/?badge=latest)
-[![Tests](https://github.com/matcool/anvil-parser/actions/workflows/run-pytest.yml/badge.svg)](https://github.com/matcool/anvil-parser/actions/workflows/run-pytest.yml)
-[![PyPI - Downloads](https://img.shields.io/pypi/dm/anvil-parser)](https://pypi.org/project/anvil-parser/)
 
-Simple parser for the [Minecraft anvil file format](https://minecraft.wiki/w/Anvil_file_format)
+Simple parser for the [Minecraft anvil file format](https://minecraft.wiki/w/Anvil_file_format) made in Python
 # Installation
-This project is available on [PyPI](https://pypi.org/project/anvil-parser/) and can be installed with pip
+This project is available on GitHub
 ```
-pip install anvil-parser
-```
-or directly from github
-```
-pip install git+https://github.com/matcool/anvil-parser.git
+pip install git+https://github.com/DN2048/anvil-parser.git
 ```
 # Usage
 ## Reading
@@ -55,12 +47,11 @@ for y in range(16):
 region.save('r.0.0.mca')
 ```
 # Todo
-*things to do before 1.0.0*
-- [x] Proper documentation
-- [x] Biomes
-- [x] CI
-- [ ] More tests
-  - [ ] Tests for 20w17a+ BlockStates format
-# Note
-Testing done in 1.14.4 - 1.19, should work fine for other versions. 
-Writing chunks and regions is broken from 1.16 onwards
+*This is my personal list, different from 0xTiger and matcool (original creator)*
+- [ ] More utility functions
+- [ ] Assert compatibility with version 1.20.1
+- [ ] Extra features depending on my needs for the other projects
+# Notes
+*These are matcool (original creator) notes. Haven't validated any of this*
+- Testing done in 1.14.4 - 1.19, should work fine for other versions
+- Writing chunks and regions is broken from 1.16 onwards
